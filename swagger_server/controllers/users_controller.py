@@ -73,7 +73,7 @@ def get_user(user_id):  # noqa: E501
 
     :rtype: User
     """
-    return 'do some magic!'
+    return 'do some magic3!'
 
 
 def post_story_user(story_id, user_id, body=None):  # noqa: E501
