@@ -1,0 +1,727 @@
+openapi: 3.0.0
+info:
+  title: CollabWrite
+  description: CollabWrite API
+  contact:
+    name: Steven McConnon
+    url: stevenmcconnon.com
+    email: stevenmcconnon@yahoo.com
+  version: "1.1"
+servers:
+- url: http://localhost:8080
+paths:
+  /story/:
+    post:
+      tags:
+      - stories
+      summary: Create Story
+      description: Create a new Story, get back a story_id.
+      operationId: post_story
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Story'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.stories_controller
+  /user/:
+    post:
+      tags:
+      - users
+      description: Creates a user, returns a user_id.
+      operationId: post_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /following/{user_id}:
+    get:
+      tags:
+      - following
+      summary: Your GET endpoint
+      description: Get all stories a user is following.
+      operationId: get_following_user_id
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Story'
+                x-content-type: application/json
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.following_controller
+  /following/{user_id}/{story_id}:
+    post:
+      tags:
+      - following
+      description: User follows a story.
+      operationId: post_follow_user_id_story_id
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.following_controller
+    delete:
+      tags:
+      - following
+      description: User unfollows a Story.
+      operationId: delete_follow_user_id_story_id
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.following_controller
+  /story/{story_id}:
+    get:
+      tags:
+      - stories
+      summary: Your GET endpoint
+      description: Get a story by story_id.
+      operationId: get_story_story_id
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Story'
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.stories_controller
+    put:
+      tags:
+      - stories
+      description: Update a Story by story_id.
+      operationId: put_story_story_id
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Story'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.stories_controller
+    delete:
+      tags:
+      - stories
+      description: Delete a story by story_id.
+      operationId: delete_story_story_id
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.stories_controller
+  /fragments/{story_id}:
+    get:
+      tags:
+      - fragments
+      summary: Your GET endpoint
+      description: Get all Story Fragments for story_id.
+      operationId: get_fragments_story_id
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoryFragment'
+                x-content-type: application/json
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.fragments_controller
+    post:
+      tags:
+      - fragments
+      description: Add new Fragment to story.
+      operationId: post_fragments_story_id
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.fragments_controller
+  /friends/{user_id}:
+    get:
+      tags:
+      - friends
+      summary: Get all Friends of User
+      description: Get all friends of user.
+      operationId: get_friends
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.friends_controller
+    delete:
+      tags:
+      - friends
+      summary: Delete all Friends of User
+      description: Delete all friends of user.
+      operationId: delete_friends_user_id
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.friends_controller
+  /story_user/{story_id}/{user_id}:
+    post:
+      tags:
+      - users
+      - stories
+      description: Add user to story.
+      operationId: post_story_user
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+    delete:
+      tags:
+      - users
+      - stories
+      description: Removes a User from a Story.
+      operationId: delete_story_user
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+  /story_users/{story_id}:
+    get:
+      tags:
+      - users
+      - stories
+      summary: Your GET endpoint
+      description: Returns a list of user_id's for a private story.
+      operationId: get_story_users
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+    delete:
+      tags:
+      - stories
+      - users
+      description: Delete all users for a story.
+      operationId: delete_story_users
+      parameters:
+      - name: story_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.stories_controller
+  /friend/{user_id}/{friend_id}:
+    post:
+      tags:
+      - friends
+      summary: Add New Friend
+      description: Add a friend relationship.
+      operationId: post_friend
+      parameters:
+      - name: friend_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.friends_controller
+    delete:
+      tags:
+      - friends
+      summary: Remove a Friend
+      description: Remove a friend relationship.
+      operationId: delete_friend
+      parameters:
+      - name: friend_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.friends_controller
+  /fragment/{fragment_id}:
+    put:
+      tags:
+      - fragments
+      summary: Update Story Fragment
+      description: Update a Story Fragment.
+      operationId: put_fragment
+      parameters:
+      - name: fragment_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoryFragment'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.fragments_controller
+    delete:
+      tags:
+      - fragments
+      summary: Delete a Story Fragment
+      description: Delete Fragment from Story.
+      operationId: delete_fragment
+      parameters:
+      - name: fragment_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.fragments_controller
+  /user/{user_id}:
+    get:
+      tags:
+      - users
+      summary: Your GET endpoint
+      description: Get a User by user_id.
+      operationId: get_user
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+    put:
+      tags:
+      - users
+      description: Update a User by user_id.
+      operationId: put_user
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+    delete:
+      tags:
+      - users
+      description: Delete a user by user_id.
+      operationId: delete_user
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      x-openapi-router-controller: swagger_server.controllers.users_controller
+components:
+  schemas:
+    User:
+      title: User
+      required:
+      - username
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        phone:
+          type: string
+        bio:
+          type: string
+        password:
+          type: string
+        birthday:
+          type: string
+        sex:
+          type: string
+        email:
+          type: string
+        image_url:
+          type: string
+      example:
+        birthday: birthday
+        country: country
+        password: password
+        city: city
+        phone: phone
+        image_url: image_url
+        sex: sex
+        name: name
+        bio: bio
+        id: 0
+        email: email
+        username: username
+      x-examples:
+        User Example 1:
+          id: 1
+          name: Maggie Robinson
+          username: magpie
+          city: San Francisco
+          country: USA
+          phone: 555-555-5555
+          bio: I am a really cool bird!
+          password: encrypted_password_here
+          birthday: 1990/07/03
+          sex: M
+          email: magpie@gmail.com
+          image_url: https://api_url/image/image_id
+      x-tags:
+      - users
+    Story:
+      title: Story
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        language:
+          type: string
+        private:
+          type: boolean
+        last_updated:
+          type: string
+          description: Date
+      example:
+        private: true
+        last_updated: last_updated
+        language: language
+        id: id
+        title: title
+      x-examples:
+        Story Example 1:
+          id: 5
+          title: Adventures of Yarko
+          language: EN
+          private: false
+          last_updated: 2020/05/01
+      x-tags:
+      - stories
+    StoryFragment:
+      title: StoryFragment
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        story_id:
+          type: integer
+      example:
+        story_id: 6
+        id: 0
+        text: text
+      x-examples:
+        StoryFragment Example 1:
+          id: 1
+          text: The aardvark set off on his great journey.
+          story_id: 1
+      x-tags:
+      - stories
+    inline_response_200:
+      type: object
+      properties:
+        story_id:
+          type: integer
+      example:
+        story_id: 0
+    inline_response_200_1:
+      type: object
+      properties:
+        user_id:
+          type: integer
+      example:
+        user_id: 0
+    inline_response_200_2:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: integer
+      example:
+        users:
+        - 0
+        - 0
+  securitySchemes: {}
+
