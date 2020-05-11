@@ -1,10 +1,13 @@
 import connexion
 import six
 
+from flask import jsonify, make_response
+
 from swagger_server.models.inline_response2001 import InlineResponse2001  # noqa: E501
 from swagger_server.models.inline_response2002 import InlineResponse2002  # noqa: E501
 from swagger_server.models.user import User  # noqa: E501
 from swagger_server import util
+
 
 
 def delete_story_user(story_id, user_id):  # noqa: E501
@@ -73,7 +76,8 @@ def get_user(user_id):  # noqa: E501
 
     :rtype: User
     """
-    return 'do some magic3!'
+    peter = User.query.filter_by(username='bobo').first()
+    return peter.city
 
 
 def post_story_user(story_id, user_id, body=None):  # noqa: E501
@@ -105,8 +109,8 @@ def post_user(body=None):  # noqa: E501
 
     :rtype: InlineResponse2001
     """
-    if connexion.request.is_json:
-        body = User.from_dict(connexion.request.get_json())  # noqa: E501
+    # if connexion.request.is_json:
+    #     body = User.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
 
 
@@ -122,6 +126,6 @@ def put_user(user_id, body=None):  # noqa: E501
 
     :rtype: None
     """
-    if connexion.request.is_json:
-        body = User.from_dict(connexion.request.get_json())  # noqa: E501
+    # if connexion.request.is_json:
+    #     body = User.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
